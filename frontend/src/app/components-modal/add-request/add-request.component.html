@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>Add Request</h2>
+<mat-dialog-content>
+ <div fxFlex fxLayout='column' fxLayoutAlign='start start'>
+   
+    <mat-form-field fxFlex class="w100">
+        <mat-label>Item Name</mat-label>
+        <input matInput placeholder="Item Name" [(ngModel)]="order.item_name">
+      </mat-form-field>
+      <mat-form-field fxFlex class="w100">
+        <mat-label>Item Height</mat-label>
+        <input matInput placeholder="Height in CM" [(ngModel)]="order.height" >
+      </mat-form-field>
+      <mat-form-field fxFlex class="w100">
+        <mat-label>Item Weight</mat-label>
+        <input matInput placeholder="Weight in KG"  [(ngModel)]="order.weight">
+      </mat-form-field>
+      <mat-form-field fxFlex appearance="fill" class="w100">
+        <mat-label>Pickup Date</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="order.picked_date">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field fxFlex class="w100">
+        <mat-label>Pickup Time</mat-label>
+        <input matInput placeholder="date" [ngxTimepicker]="pickertime" [(ngModel)]="order.picked_time">
+        <ngx-material-timepicker #pickertime class="timepicker"></ngx-material-timepicker>
+      </mat-form-field>
+      <mat-form-field fxFlex class="w100">
+        <mat-label>PickedUp Address</mat-label>
+        <textarea matInput placeholder="" [(ngModel)]="order.pickedup_location"></textarea>
+      </mat-form-field>
+      <mat-form-field fxFlex class="w100">
+        <mat-label>Delivery Address</mat-label>
+        <textarea matInput placeholder="" [(ngModel)]="order.delivery_location"></textarea>
+      </mat-form-field>
+      <mat-form-field fxFlex class="w100">
+        <mat-label>Special Note</mat-label>
+        <textarea matInput placeholder="Special notes for driver" [(ngModel)]="order.customer_notes"></textarea>
+      </mat-form-field>
+</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+     <div fxFlex fxLayout='row' fxLayoutAlign='space-between start'>
+        <button mat-button mat-dialog-close class="cancelbtn">Close</button>
+        <button mat-button (click)="save()" class="succesbtn">Add Request</button>
+</div>
+ 
+</mat-dialog-actions>

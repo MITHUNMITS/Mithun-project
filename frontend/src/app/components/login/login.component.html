@@ -1,0 +1,16 @@
+<div fxFlex fxLayout="column"  class="container1 pagefull" fxLayoutAlign="center center" >
+   <div fxLayout='column' fxLayoutAlign="center center" class="login-form" fxLayoutGap="10px">
+    <div class="project-name">{{projectName}}</div>
+    <mat-form-field fxFlex class="w100">
+      <mat-label>Username</mat-label>
+      <input matInput placeholder="username" [(ngModel)]="usersLogin.email" name="email">
+    </mat-form-field>
+    <mat-form-field fxFlex class="w100">
+      <mat-label>Password</mat-label>
+      <input matInput placeholder="password" [(ngModel)]="usersLogin.password" name="password">
+    </mat-form-field>
+  
+    <button fxFlex mat-raised-button color="primary" (click)="login()" class="w100">Login</button>
+  </div>
+   
+    </div>

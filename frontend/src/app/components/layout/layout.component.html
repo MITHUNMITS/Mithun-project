@@ -1,0 +1,325 @@
+<div class="admin-layout">
+
+    <mat-sidenav-container class = "tp-container">
+        <mat-sidenav mode = "side" opened>
+           <section fxLayout="column">
+             <div fxFlex fxLayout='row' fxLayoutAlign='center center' class="toptext">
+              <div *ngIf="currentUser.type==1" class="">SENDER</div>
+              <div *ngIf="currentUser.type==2">BIKER</div>
+            </div>
+            <div fxFlex fxLayout='column' fxLayoutAlign='center center' fxLayoutGap="10px" class="user_desc" fxLayoutGap="40px">
+              <img src="assets/img/user.jpeg" class="userimg" *ngIf="currentUser.type==1"/>
+              <img src="assets/img/biker.jpeg" class="userimg" *ngIf="currentUser.type==2"/>
+              <div fxFlex fxLayout='row' fxLayoutAlign='start start'>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td class="head">Name : </td>
+                      <td class="ans">{{currentUser.name}}</td>
+                    </tr>
+                    <tr>
+                      <td class="head">Email : </td>
+                      <td class="ans">{{currentUser.email}}</td>
+                    </tr>
+                    <tr>
+                      <td class="head">Phone : </td>
+                      <td class="ans">{{currentUser.phone}}</td>
+                    </tr>
+                    <tr *ngIf="currentUser.type==2">
+                      <td class="head">Licence No. : </td>
+                      <td class="ans">{{currentUser.licence}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+           </section>
+           <section class = "tp-section">
+           
+           </section>
+        </mat-sidenav>
+        <mat-sidenav-content>
+
+             <div fxFlex fxLayout='column' fxLayoutAlign='start start'>
+                <mat-toolbar color="primary">
+                     <div fxFlex fxLayout='row' fxLayoutAlign='space-between start'>
+                        <span>{{projectName}}</span>
+                        <button mat-icon-button (click)="logout()">
+                          <mat-icon>exit_to_app</mat-icon>
+                        </button>
+                    </div>
+                   
+                  </mat-toolbar>
+                  
+                  <div  fxLayout="column" *ngIf="currentUser.type==1" class="w100 p20" fxLayoutGap="30px">
+                     <div Fxflex fxLayout='row' fxLayoutAlign='start start' fxLayoutGap="20px">
+                        <mat-card fxFlex *ngFor="let item of dashboard" class="tools">
+                            <mat-card-content>
+                               <div fxFlex fxLayout='column' fxLayoutAlign='center center' fxLayoutGap="20px">
+                                <div class="header">{{item.title}}</div>
+                                <div class="count">{{item.value}}</div>
+                              </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                     <div fxFlex fxLayout='column' fxLayoutAlign='center center'>
+                        <button mat-raised-button (click)="addRequest()">Add Request</button>
+                    </div>
+                    <div fxFlex fxLayout='row' fxLayoutAlign='start start'>
+                        <mat-tab-group fxFlex mat-stretch-tabs (selectedTabChange)="loadLists()">
+                            <mat-tab label="Active"  > 
+                                <table mat-table [dataSource]="ActivedataSource" class="mat-elevation-z8 w100">
+                                  
+                                    <!-- Name Column -->
+                                    <ng-container matColumnDef="no">
+                                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                                        <td mat-cell *matCellDef="let element;let i = index">{{i+1}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="ref">
+                                        <th mat-header-cell *matHeaderCellDef> ID </th>
+                                        <td mat-cell *matCellDef="let element">{{element.order_ref}} </td>
+                                      </ng-container>
+                                    <ng-container matColumnDef="name">
+                                      <th mat-header-cell *matHeaderCellDef> Name </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.item_name}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="date">
+                                        <th mat-header-cell *matHeaderCellDef>PickUp Date/Time </th>
+                                        <td mat-cell *matCellDef="let element">{{formatDate(element.picked_date)}} {{element.picked_time}}</td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="ddate">
+                                        <th mat-header-cell *matHeaderCellDef>Estimated Delivery </th>
+                                        <td mat-cell *matCellDef="let element"> {{formatDate(element.delivery_date)}} {{element.delivery_time}}</td>
+                                      </ng-container>
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                                        <td mat-cell *matCellDef="let element">{{element.status_name}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef> action </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <button mat-raised-button (click)="viewDetails(element.id)" class="viewbtn">View Details</button>
+                                        </td>
+                                      </ng-container>
+                                      
+                                  
+                                  
+                                    <tr mat-header-row *matHeaderRowDef="ActiveSenderColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ActiveSenderColumns;"></tr>
+                                    <tr class="mat-row" *matNoDataRow class="no-data">
+                                      <td class="mat-cell" [attr.colspan]="ActiveSenderColumns.length">
+                                        No data available.
+                                      </td>
+                                    </tr>
+                                  </table>
+                            </mat-tab>
+                            <mat-tab label="History" >
+                                <table mat-table [dataSource]="PastdataSource" class="mat-elevation-z8 w100">
+                                  
+                                    <!-- Name Column -->
+                                    <ng-container matColumnDef="no">
+                                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                                        <td mat-cell *matCellDef="let element;let i = index">{{i+1}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="ref">
+                                        <th mat-header-cell *matHeaderCellDef> ID </th>
+                                        <td mat-cell *matCellDef="let element">{{element.order_ref}} </td>
+                                      </ng-container>
+                                    <ng-container matColumnDef="name">
+                                      <th mat-header-cell *matHeaderCellDef> Name </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.item_name}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="date">
+                                        <th mat-header-cell *matHeaderCellDef>PickedUp Date/Time </th>
+                                        <td mat-cell *matCellDef="let element">{{formatDate(element.picked_date)}} {{element.picked_time}}</td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="ddate">
+                                        <th mat-header-cell *matHeaderCellDef>Delivered Date/Time </th>
+                                        <td mat-cell *matCellDef="let element"> {{formatDate(element.delivery_date)}} {{element.delivery_time}}</td>
+                                      </ng-container>
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                                        <td mat-cell *matCellDef="let element">{{element.status_name}} </td>
+                                      </ng-container>
+                                                                            <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef> action </th>
+                                        <td mat-cell *matCellDef="let element">
+                                             <button mat-raised-button (click)="viewDetails(element.id)" class="viewbtn">View Details</button>
+                                        </td>
+                                      </ng-container>
+                                      
+                                  
+                                  
+                                    <tr mat-header-row *matHeaderRowDef="ActiveSenderColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ActiveSenderColumns;"></tr>
+                                    <tr class="mat-row" *matNoDataRow class="no-data">
+                                      <td class="mat-cell" [attr.colspan]="ActiveSenderColumns.length">
+                                        No data available.
+                                      </td>
+                                    </tr>
+                                  </table>    
+                            </mat-tab>>
+                          </mat-tab-group>
+                    </div>
+                  </div>
+            
+                  <div fxFlex fxLayout="column" *ngIf="currentUser.type==2" class="w100 p20" fxLayoutGap="30px">
+                     <div  fxLayout='row' fxLayoutAlign='start start'  fxLayoutGap="20px">
+                      <mat-card fxFlex *ngFor="let item of dashboard" class="tools">
+                        <mat-card-content>
+                           <div fxFlex fxLayout='column' fxLayoutAlign='center center' fxLayoutGap="20px">
+                            <div class="header">{{item.title}}</div>
+                            <div class="count">{{item.value}}</div>
+                          </div>
+                        </mat-card-content>
+                    </mat-card>
+                    </div>
+
+                    <div fxLayout='row' fxLayoutAlign='start start'>
+                        <mat-tab-group fxFlex mat-stretch-tabs (selectedTabChange)="loadLists()">
+                            <mat-tab label="New"  > 
+                                <table mat-table [dataSource]="NewdataSource" class="mat-elevation-z8 w100">
+                                  
+                                    <!-- Name Column -->
+                                    <ng-container matColumnDef="no">
+                                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                                        <td mat-cell *matCellDef="let element;let i = index">{{i+1}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="ref">
+                                        <th mat-header-cell *matHeaderCellDef> ID </th>
+                                        <td mat-cell *matCellDef="let element">{{element.order_ref}} </td>
+                                      </ng-container>
+                                    <ng-container matColumnDef="name">
+                                      <th mat-header-cell *matHeaderCellDef> Name </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.item_name}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="date">
+                                        <th mat-header-cell *matHeaderCellDef>PickUp Date/Time </th>
+                                        <td mat-cell *matCellDef="let element">{{formatDate(element.picked_date)}} {{element.picked_time}}</td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="ddate">
+                                        <th mat-header-cell *matHeaderCellDef>Estimated Delivery </th>
+                                        <td mat-cell *matCellDef="let element"> {{formatDate(element.delivery_date)}} {{element.delivery_time}}</td>
+                                      </ng-container>
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                                        <td mat-cell *matCellDef="let element">{{element.status_name}} </td>
+                                      </ng-container>
+                                                                            <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef> action </th>
+                                        <td mat-cell *matCellDef="let element">
+                                             <button mat-raised-button (click)="viewDetails(element.id)" class="viewbtn">View Details</button>
+                                        </td>
+                                      </ng-container>
+                                      
+                                  
+                                  
+                                    <tr mat-header-row *matHeaderRowDef="ActiveSenderColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ActiveSenderColumns;"></tr>
+                                    <tr class="mat-row" *matNoDataRow class="no-data">
+                                      <td class="mat-cell" [attr.colspan]="ActiveSenderColumns.length">
+                                        No data available.
+                                      </td>
+                                    </tr>
+                                  </table>
+                            </mat-tab>
+                            <mat-tab label="Active"  > 
+                                <table mat-table [dataSource]="ActivedataSource" class="mat-elevation-z8 w100">
+                                  
+                                    <!-- Name Column -->
+                                    <ng-container matColumnDef="no">
+                                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                                        <td mat-cell *matCellDef="let element;let i = index">{{i+1}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="ref">
+                                        <th mat-header-cell *matHeaderCellDef> ID </th>
+                                        <td mat-cell *matCellDef="let element">{{element.order_ref}} </td>
+                                      </ng-container>
+                                    <ng-container matColumnDef="name">
+                                      <th mat-header-cell *matHeaderCellDef> Name </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.item_name}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="date">
+                                        <th mat-header-cell *matHeaderCellDef>PickUp Date/Time </th>
+                                        <td mat-cell *matCellDef="let element">{{formatDate(element.picked_date)}} {{element.picked_time}}</td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="ddate">
+                                        <th mat-header-cell *matHeaderCellDef>Estimated Delivery </th>
+                                        <td mat-cell *matCellDef="let element"> {{formatDate(element.delivery_date)}} {{element.delivery_time}}</td>
+                                      </ng-container>
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                                        <td mat-cell *matCellDef="let element">{{element.status_name}} </td>
+                                      </ng-container>
+                                                                            <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef> action </th>
+                                        <td mat-cell *matCellDef="let element">
+                                             <button mat-raised-button (click)="viewDetails(element.id)" class="viewbtn">View Details</button>
+                                        </td>
+                                      </ng-container>
+                                      
+                                  
+                                  
+                                    <tr mat-header-row *matHeaderRowDef="ActiveSenderColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ActiveSenderColumns;"></tr>
+                                    <tr class="mat-row" *matNoDataRow class="no-data">
+                                      <td class="mat-cell" [attr.colspan]="ActiveSenderColumns.length">
+                                        No data available.
+                                      </td>
+                                    </tr>
+                                  </table>
+                            </mat-tab>
+                            <mat-tab label="History" >
+                                <table mat-table [dataSource]="PastdataSource" class="mat-elevation-z8 w100">
+                                  
+                                    <!-- Name Column -->
+                                    <ng-container matColumnDef="no">
+                                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                                        <td mat-cell *matCellDef="let element;let i = index">{{i+1}} </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="ref">
+                                        <th mat-header-cell *matHeaderCellDef> ID </th>
+                                        <td mat-cell *matCellDef="let element">{{element.order_ref}} </td>
+                                      </ng-container>
+                                    <ng-container matColumnDef="name">
+                                      <th mat-header-cell *matHeaderCellDef> Name </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.item_name}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="date">
+                                        <th mat-header-cell *matHeaderCellDef>PickedUp Date/Time </th>
+                                        <td mat-cell *matCellDef="let element">{{formatDate(element.picked_date)}} {{element.picked_time}}</td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="ddate">
+                                        <th mat-header-cell *matHeaderCellDef>Delivered  Date/Time</th>
+                                        <td mat-cell *matCellDef="let element"> {{formatDate(element.delivery_date)}} {{element.delivery_time}}</td>
+                                      </ng-container>
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                                        <td mat-cell *matCellDef="let element">{{element.status_name}} </td>
+                                      </ng-container>
+                                                                            <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef> action </th>
+                                        <td mat-cell *matCellDef="let element">
+                                             <button mat-raised-button (click)="viewDetails(element.id)" class="viewbtn">View Details</button>
+                                        </td>
+                                      </ng-container>
+                                      
+                                  
+                                  
+                                    <tr mat-header-row *matHeaderRowDef="ActiveSenderColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ActiveSenderColumns;"></tr>
+                                    <tr class="mat-row" *matNoDataRow class="no-data">
+                                      <td class="mat-cell" [attr.colspan]="ActiveSenderColumns.length">
+                                        No data available.
+                                      </td>
+                                    </tr>
+                                  </table>    
+                            </mat-tab>
+                          </mat-tab-group>
+                    </div>
+                 </div>
+            </div>
+        </mat-sidenav-content>
+     </mat-sidenav-container>
+
+</div>

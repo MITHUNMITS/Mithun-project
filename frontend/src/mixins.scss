@@ -1,0 +1,86 @@
+@mixin css3-prefix($property, $value) {
+    -webkit-#{$property}: #{$value};
+    -khtml-#{$property}: #{$value};
+    -moz-#{$property}: #{$value};
+    -ms-#{$property}: #{$value};
+    -o-#{$property}: #{$value};
+    #{$property}: #{$value};
+}
+
+// TEXT SHADOW
+@mixin text-shadow($x: 2px, $y: 2px, $blur: 5px, $color: rgba(0,0,0,.4)) {
+    text-shadow: $x $y $blur $color;
+}
+
+@mixin  font-normal{
+    font-family: Optima, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@mixin border-radius($radius: 5px) {
+    @include css3-prefix('border-radius', $radius);
+}
+
+@mixin border-radius-separate($topLeftRadius: 5px, $topRightRadius: 5px, $bottomLeftRadius: 5px, $bottomRightRadius: 5px) {
+    -webkit-border-radius: $topLeftRadius $topRightRadius $bottomRightRadius $bottomLeftRadius;
+
+    -moz-border-radius: $topLeftRadius $topRightRadius $bottomRightRadius $bottomLeftRadius;
+
+    border-radius: $topLeftRadius $topRightRadius $bottomRightRadius $bottomLeftRadius;
+}
+
+// BOX SHADOW
+@mixin box-shadow($x: 2px, $y: 2px, $blur: 5px, $color: rgba(0,0,0,.4), $inset: "") {
+    @if ($inset != "") {
+        @include css3-prefix('box-shadow', $inset $x $y $blur $color);
+    } @else {
+        @include css3-prefix('box-shadow', $x $y $blur $color);
+    }
+}
+
+// OPACITY
+@mixin opacity($opacity: 0.5) {
+    $opacityMultiplied: ($opacity * 100);
+
+    filter: alpha(opacity=$opacityMultiplied);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=" + $opacityMultiplied + ")";
+    @include css3-prefix('opacity', $opacity);
+}
+
+@mixin border-box {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+@mixin default-transition($transition_speed : '0.5s') {
+    @include css3-prefix('transition', $transition_speed);
+}
+@mixin word-wrap() {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+@mixin truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@mixin truncate_no_ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+@mixin below_tablet_style{
+    @media (max-width: 768px) {
+        @content
+    }
+}
+
+@mixin below_desktop_style{
+    @media (max-width: 992px){
+        @content
+    }
+}

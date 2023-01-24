@@ -1,0 +1,242 @@
+<h2 mat-dialog-title>Parcel Details  ({{order.order_ref}}) - {{order.status_name}}</h2>
+<mat-dialog-content *ngIf="order">
+ <div fxFlex fxLayout='column' fxLayoutAlign='start start' *ngIf="currentUser.type==2" fxLayoutGap="10px" class="w100">
+     <div fxFlex fxLayout='column' fxLayoutAlign='start start' *ngIf="order.order_status!=0" class="w100" fxLayoutGap="10px">
+        <mat-card class="w100">
+            <mat-card-header>
+                <mat-card-title>Customer Details</mat-card-title>
+           </mat-card-header>
+           <mat-card-content>
+             <div fxFlex fxLayout='row' fxLayoutAlign='start start'>
+                <table class="w100">
+                    <tbody>
+                        <tr><td>Customer Name : </td><td> -  </td></tr>
+                        <tr><td>Phone No : </td><td> -  </td></tr>
+                        <tr><td>Email : </td><td> - </td></tr>
+                        <tr><td>PickUp Address : </td><td> {{order.pickedup_location}}</td></tr>
+                        <tr><td>Delivery Address : </td><td>  {{order.delivery_location}}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+           </mat-card-content>
+        </mat-card>
+        <mat-card class="w100">
+            <mat-card-header >
+                <mat-card-title>Parcel Details</mat-card-title>
+           </mat-card-header>
+           <mat-card-content>
+            <div fxFlex fxLayout='row' fxLayoutAlign='start start'>
+               <table class="w100">
+                   <tbody>
+                       <tr><td>Item Name : </td><td> {{order.item_name}}</td></tr>
+                       <tr><td>Heigth (cm) : </td><td>  {{order.height}}</td></tr>
+                       <tr><td>Weigth (Kg) : </td><td> {{order.weight}}</td></tr>
+                       <tr><td>Pick Date : </td><td> {{order.picked_date}}  {{order.picked_time}}</td></tr>
+                       <tr><td>Notes : </td><td> {{order.customer_notes}}</td></tr>
+                   </tbody>
+               </table>
+           </div>
+           </mat-card-content>
+       </mat-card>
+        <mat-form-field appearance="fill" class="w100" *ngIf="order.order_status!=1 && order.order_status!=0">
+            <mat-label>Staus</mat-label>
+            <mat-select [(ngModel)]="order.order_status">
+              <mat-option *ngFor="let status of statuslist" [value]="status.value">
+                {{status.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+           <div fxFlex fxLayout='row' fxLayoutAlign='start center' fxLayoutGap="10px"  class="w100">
+            <mat-form-field fxFlex appearance="fill" class="w100">
+                <mat-label>Pick-Up Date</mat-label>
+                <input matInput [matDatepicker]="picker" [(ngModel)]="order.picked_date">
+                <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field fxFlex class="w100">
+                <mat-label>Pick-Up Time</mat-label>
+                <input matInput placeholder="date" [ngxTimepicker]="pickertime" [(ngModel)]="order.picked_time">
+                <ngx-material-timepicker #pickertime class="timepicker"></ngx-material-timepicker>
+              </mat-form-field>
+          </div>
+           <div fxFlex fxLayout='row' fxLayoutAlign='start center' fxLayoutGap="10px"  class="w100">
+            <mat-form-field fxFlex appearance="fill" class="w100">
+                <mat-label>Drop-Off Date</mat-label>
+                <input matInput [matDatepicker]="dpicker" [(ngModel)]="order.delivery_date">
+               <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+                <mat-datepicker-toggle matSuffix [for]="dpicker"></mat-datepicker-toggle>
+                <mat-datepicker #dpicker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field fxFlex class="w100">
+                <mat-label>Drop-Off Time</mat-label>
+                <input matInput placeholder="date" [ngxTimepicker]="dpickertime" [(ngModel)]="order.delivery_time">
+                <ngx-material-timepicker #dpickertime class="timepicker"></ngx-material-timepicker>
+              </mat-form-field>
+          </div>
+         
+          <mat-form-field fxFlex class="w100">
+            <mat-label>Note for Customer</mat-label>
+            <textarea matInput placeholder="Special notes for Customer" [(ngModel)]="order.driver_notes"></textarea>
+          </mat-form-field>
+    
+           <div fxFlex fxLayout='column' fxLayoutAlign='center center' class="w100" fxLayoutGap="20px">
+            <button mat-raised-button (click)="addLogs()"> Add Logs </button>
+             <div fxFlex fxLayout='column' fxLayoutAlign='start start' class="w100" fxLayoutGap="10px" fxLayoutGap="20px">
+                <mat-card class="w100"  *ngFor="let log of order.logs" class="w100">
+                     <div fxFlex fxLayout='row' fxLayoutAlign='center center'>
+                        <div fxFlex="25" class="w100" fxLayoutAlign="center center"><div class="logtime">{{formatDateTime(log.date)}}</div></div>
+                        <div fxFlex="75" class="w100">
+                            <mat-form-field fxFlex class="w100">
+                                <mat-label>Log</mat-label>
+                                <textarea matInput placeholder="Add parcel logs" [(ngModel)]="log.message"></textarea>
+                              </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+          </div>
+    </div>
+     <div fxFlex fxLayout='column' fxLayoutAlign='start start' *ngIf="order.order_status==0" class="w100" fxLayoutGap="10px">
+        <mat-card class="w100">
+            <mat-card-header>
+                <mat-card-title>Customer Details</mat-card-title>
+           </mat-card-header>
+           <mat-card-content>
+             <div fxFlex fxLayout='row' fxLayoutAlign='start start'>
+                <table class="w100">
+                    <tbody>
+                        <tr><td>Customer Name : </td><td> {{order.customerDetails.name}}  </td></tr>
+                        <tr><td>Phone No : </td><td> {{order.customerDetails.phone}}  </td></tr>
+                        <tr><td>Email : </td><td> {{order.customerDetails.email}} </td></tr>
+                        <tr><td>PickUp Address : </td><td> {{order.pickedup_location}}</td></tr>
+                        <tr><td>Delivery Address : </td><td>  {{order.delivery_location}}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+           </mat-card-content>
+        </mat-card>
+        <mat-card class="w100">
+            <mat-card-header >
+                <mat-card-title>Parcel Details</mat-card-title>
+           </mat-card-header>
+           <mat-card-content>
+            <div fxFlex fxLayout='row' fxLayoutAlign='start start'>
+               <table class="w100">
+                   <tbody>
+                       <tr><td>Item Name : </td><td> {{order.item_name}}</td></tr>
+                       <tr><td>Heigth (cm) : </td><td>  {{order.height}}</td></tr>
+                       <tr><td>Weigth (Kg) : </td><td> {{order.weight}}</td></tr>
+                       <tr><td>Pick Date : </td><td> {{formatDate(order.picked_date)}}  {{order.picked_time}}</td></tr>
+                       <tr><td>Notes : </td><td> {{order.customer_notes}}</td></tr>
+                   </tbody>
+               </table>
+           </div>
+           </mat-card-content>
+       </mat-card>
+       <mat-card class="w100" *ngIf="order.driver_id">
+        <mat-card-header >
+            <mat-card-title>Pickup / Drop-off Details</mat-card-title>
+       </mat-card-header>
+       <mat-card-content>
+        <div fxFlex fxLayout='column' fxLayoutAlign='start start' fxLayoutGap="20px">
+           <table class="w100">
+               <tbody>
+                   <tr><td>Biker Name : </td><td>  {{order.driverDetails.name}} </td></tr>
+                   <tr><td>Biker Contact : </td><td> {{order.driverDetails.phone}} </td></tr>
+                   <tr><td>Bike Number : </td><td> {{order.driverDetails.licence}}  </td></tr>
+                   <tr><td>Drop-off Estimation : </td><td> {{formatDate(order.delivery_date)}}  {{order.delivery_time}}  </td></tr>
+                   <tr><td>Notes : </td><td>  {{order.driver_notes}}  </td></tr>
+               </tbody>
+           </table>
+           <table class="w100">
+            <tbody>
+                <tr *ngFor="let log of order.logs">
+                  <td>{{log.date}}</td>
+                  <td>{{log.message}}</td>
+                </tr>
+            </tbody>
+        </table>
+       </div>
+       </mat-card-content>
+      </mat-card>
+    </div>
+  
+</div>
+<div fxFlex fxLayout='column' fxLayoutAlign='start start' *ngIf="currentUser.type==1" fxLayoutGap="10px">
+  <mat-card class="w100">
+      <mat-card-header>
+          <mat-card-title>Customer Details</mat-card-title>
+     </mat-card-header>
+     <mat-card-content>
+       <div fxFlex fxLayout='row' fxLayoutAlign='start start'>
+          <table class="w100">
+              <tbody>
+                  <tr><td>Customer Name : </td><td> {{order.customerDetails.name}}  </td></tr>
+                  <tr><td>Phone No : </td><td> {{order.customerDetails.phone}}  </td></tr>
+                  <tr><td>Email : </td><td> {{order.customerDetails.email}} </td></tr>
+                  <tr><td>PickUp Address : </td><td> {{order.pickedup_location}}</td></tr>
+                  <tr><td>Delivery Address : </td><td>  {{order.delivery_location}}</td></tr>
+              </tbody>
+          </table>
+      </div>
+     </mat-card-content>
+  </mat-card>
+  <mat-card class="w100">
+      <mat-card-header >
+          <mat-card-title>Parcel Details</mat-card-title>
+     </mat-card-header>
+     <mat-card-content>
+      <div fxFlex fxLayout='row' fxLayoutAlign='start start'>
+         <table class="w100">
+             <tbody>
+                 <tr><td>Item Name : </td><td> {{order.item_name}}</td></tr>
+                 <tr><td>Heigth (cm) : </td><td>  {{order.height}}</td></tr>
+                 <tr><td>Weigth (Kg) : </td><td> {{order.weight}}</td></tr>
+                 <tr><td>Pick Date : </td><td> {{formatDate(order.picked_date)}}  {{order.picked_time}}</td></tr>
+                 <tr><td>Notes : </td><td> {{order.customer_notes}}</td></tr>
+             </tbody>
+         </table>
+     </div>
+     </mat-card-content>
+ </mat-card>
+ <mat-card class="w100" *ngIf="order.driver_id">
+  <mat-card-header >
+      <mat-card-title>Pickup / Drop-off Details</mat-card-title>
+ </mat-card-header>
+ <mat-card-content>
+  <div fxFlex fxLayout='column' fxLayoutAlign='start start' fxLayoutGap="20px">
+     <table class="w100">
+         <tbody>
+             <tr><td>Biker Name : </td><td>  {{order.driverDetails.name}} </td></tr>
+             <tr><td>Biker Contact : </td><td> {{order.driverDetails.phone}} </td></tr>
+             <tr><td>Bike Number : </td><td> {{order.driverDetails.licence}}  </td></tr>
+             <tr><td>Drop-off Estimation : </td><td> {{formatDate(order.delivery_date)}}  {{order.delivery_time}}  </td></tr>
+             <tr><td>Notes : </td><td>  {{order.driver_notes}}  </td></tr>
+         </tbody>
+     </table>
+     <table class="w100">
+      <tbody>
+          <tr *ngFor="let log of order.logs">
+            <td>{{formatDateTime(log.date)}}</td>
+            <td>{{log.message}}</td>
+          </tr>
+      </tbody>
+  </table>
+ </div>
+ </mat-card-content>
+</mat-card>
+
+</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+     <div fxFlex fxLayout='row' fxLayoutAlign='space-between start'>
+        <button mat-button mat-dialog-close class="cancelbtn">Close</button>
+        <button mat-button (click)="save(1)" class="succesbtn" *ngIf="order && order.order_status!=0 && currentUser.type!=1">
+            <span *ngIf="order.order_status==1"> Accept Parcel</span>
+            <span *ngIf="order.order_status!=1 && order.order_status!=0"> Update</span>
+           
+        </button>
+</div>
+ 
+</mat-dialog-actions>
